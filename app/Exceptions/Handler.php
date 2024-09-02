@@ -4,6 +4,13 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+
 
 class Handler extends ExceptionHandler
 {
@@ -23,8 +30,40 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        // $this->reportable(function (Throwable $e) {
+        //     //
+        // });
+        $this->renderable(function (Throwable $exception, $request) {
+            if ($request->is('api/*')) {
+                if ($exception instanceof AuthenticationException) {
+                    return response()->json([
+                    'error' => 'Not authenticated',
+                    'message' => 'Token required'
+                    ], 401);
+                }
+
+                if ($exception instanceof ModelNotFoundException) {
+                    return response()->json([
+                    'error' => 'Resource Not Found',
+                    'message' => 'The requested resource could not be found.'
+                    ], 404);
+                }
+
+                if ($exception instanceof ValidationException) {
+                    return response()->json([
+                    'error' => 'Validation Error',
+                    'message' => $exception->validator->errors()
+                    ], 400);
+                }
+
+
+                return response()->json([
+            'error' => 'Server Error',
+            'message' => 'An internal server error occurred.'
+        ], 500);
+
+            }
         });
     }
+
 }
