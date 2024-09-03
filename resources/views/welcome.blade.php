@@ -30,7 +30,7 @@
         <h1>Warehouse API</h1>
         <p>Nama: Muhammad Syaifullah Al Arief</p>
         <p>For API Postman documentation, please visit the following link:</p>
-        <p><a href="https://link-ke-dokumentasi-api.com" target="_blank">API Documentation</a></p>
+        <p><a href="https://documenter.getpostman.com/view/12326491/2sAXjM3ra9" target="_blank">API Documentation</a></p>
     </div>
 </body>
 </html>
