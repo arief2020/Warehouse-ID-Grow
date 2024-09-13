@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
 
                 return response()->json([
             'error' => 'Server Error',
-            'message' => 'An internal server error occurred.'
+            'message' => $exception->getMessage()
         ], 500);
 
             }

@@ -6,6 +6,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MutationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\CloudinaryUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +24,12 @@ use App\Http\Controllers\UserController;
 Route::get('/hello', function () {
     return response()->json(['message' => 'Hello, World!']);
 });
-
+// email
+Route::post('/email', [EmailController::class, 'sendEmail']);
+// file upload
+Route::post('/upload-file', [FileUploadController::class, 'upload']);
+// cloudinary upload
+Route::post('/upload-cloudinary', [CloudinaryUploadController::class, 'upload']);
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -51,5 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // mutation by product
     Route::get('/products/{id}/mutations', [ProductController::class, 'getMutationsbyProduct']);
+
+
 });
 

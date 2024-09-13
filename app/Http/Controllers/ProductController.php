@@ -11,13 +11,20 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource. (get all products)
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $product = Product::all();
+        $search = $request->query('search');
+
+        if ($search) {
+            $products = Product::where('name', 'like', "%{$search}%")->get();
+        } else {
+            $products = Product::all();
+        }
+
         return response()->json([
-            'message' => 'success get all products',
-            'data' => $product
+            'message' => 'success get products',
+            'data' => $products
         ]);
     }
 

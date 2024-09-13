@@ -13,13 +13,35 @@ class MutationController extends Controller
     /**
      * Display a listing of the resource. (get all products)
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $mutation = Mutation::all();
+        $type = $request->query('type');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+
+        if (!$endDate) {
+            $endDate = now()->toDateString();
+        }
+
+        $query = Mutation::query();
+
+        if ($type) {
+            $query->where('type', $type);
+        }
+
+        if ($startDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        } else {
+            $query->where('date', '<=', $endDate);
+        }
+
+
+        $mutations = $query->get();
+
         return response()->json([
-            'message' => 'success get all mutations',
-            'data' => $mutation
+            'message' => 'success get filtered mutations',
+            'data' => $mutations
         ]);
     }
 
@@ -77,7 +99,7 @@ class MutationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        
+
         try {
             $user = Auth::user();
 
